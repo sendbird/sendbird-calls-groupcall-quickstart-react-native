@@ -1,0 +1,139 @@
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { Keyboard, ScrollView, StyleSheet, View } from 'react-native';
+
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { useAlert } from '@sendbird/uikit-react-native-foundation';
+
+import InputSafeView from '../components/InputSafeView';
+import SBButton from '../components/SBButton';
+import SBIcon from '../components/SBIcon';
+import SBText from '../components/SBText';
+import SBTextInput from '../components/SBTextInput';
+import { useGroupNavigation } from '../hooks/useGroupNavigation';
+import { GroupRoutes } from '../navigations/routes';
+import Palette from '../styles/palette';
+import { getErrorMessage } from '../utils/error';
+import { AppLogger } from '../utils/logger';
+
+const GroupCallDialScreen = () => {
+  const { alert } = useAlert();
+  const {
+    navigation: { navigate },
+  } = useGroupNavigation<GroupRoutes.DIAL>();
+
+  const [roomId, setRoomId] = useState<string>('');
+  useFocusEffect(
+    useCallback(() => {
+      setRoomId('');
+    }, []),
+  );
+
+  const onNavigate = async (isCreated = false) => {
+    if (isCreated) {
+      try {
+        const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+        AppLogger.log('[GroupCallDialScreen] createRoom - ', room.roomId);
+        await room.enter();
+        navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
+      } catch (e) {
+        AppLogger.log('[GroupCallDialScreen::ERROR] createRoom - ', e);
+        alert({ title: 'Create a room', message: 'The createRoom() method call has failed.' });
+      }
+    } else {
+      Keyboard.dismiss();
+      try {
+        const room = await SendbirdCalls.fetchRoomById(roomId);
+        AppLogger.log('[GroupCallDialScreen] fetchRoomById - ', room);
+        navigate(GroupRoutes.ENTER_ROOM, { roomId });
+      } catch (e) {
+        AppLogger.log('[GroupCallDialScreen::ERROR] fetchRoomById - ', e);
+        alert({ title: 'Enter a room', message: getErrorMessage(e) });
+      }
+    }
+  };
+
+  return (
+    <InputSafeView>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
+        <View style={styles.card}>
+          <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />
+          <SBText h1 style={styles.title}>
+            Create a room
+          </SBText>
+          <SBText body2>Start a group call in a room and share the room ID with others.</SBText>
+          <SBButton style={styles.button} onPress={() => onNavigate(true)}>
+            {'Create'}
+          </SBButton>
+        </View>
+
+        <View style={[styles.card, { marginTop: 20 }]}>
+          <SBIcon icon={'Join'} containerStyle={{ alignItems: 'flex-start' }} />
+          <SBText h1 style={styles.title}>
+            Enter with room ID
+          </SBText>
+          <SBText body2>Enter an existing room to participate in a group call.</SBText>
+          <View style={styles.inputBox}>
+            <SBTextInput
+              value={roomId}
+              onChangeText={setRoomId}
+              placeholder={'Room ID'}
+              placeholderTextColor={Palette.onBackgroundLight02}
+              onSubmitEditing={() => onNavigate()}
+              style={styles.input}
+              autoCapitalize={'none'}
+              autoCorrect={false}
+            />
+            {!!roomId && (
+              <SBButton variant="text" style={styles.textButton} onPress={() => onNavigate()}>
+                {'Enter'}
+              </SBButton>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </InputSafeView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: Palette.background100,
+  },
+  card: {
+    backgroundColor: Palette.background50,
+    padding: 24,
+    borderRadius: 4,
+  },
+  title: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  button: {
+    height: 48,
+    marginTop: 24,
+    borderRadius: 4,
+  },
+  inputBox: {
+    marginTop: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    backgroundColor: Palette.background100,
+  },
+  textButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginLeft: 8,
+  },
+});
+
+export default GroupCallDialScreen;

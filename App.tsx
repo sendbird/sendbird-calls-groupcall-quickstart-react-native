@@ -1,117 +1,108 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import React, {type PropsWithChildren} from 'react';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+  DialogProvider,
+  LightUIKitTheme,
+  Palette,
+  ToastProvider,
+  UIKitThemeProvider,
+} from '@sendbird/uikit-react-native-foundation';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Header, { HeaderLeftTypes } from './src/components/Header';
+import { AuthProvider, useAuthContext } from './src/contexts/AuthContext';
+import { CALL_PERMISSIONS, usePermissions } from './src/hooks/usePermissions';
+import { navigationRef } from './src/libs/StaticNavigation';
+import GroupCallHomeTab from './src/navigations/GroupCallHomeTab';
+import { GroupRoutes } from './src/navigations/routes';
+import GroupCallAppInfoScreen from './src/screens/GroupCallAppInfoScreen';
+import GroupCallEnterRoomScreen from './src/screens/GroupCallEnterRoomScreen';
+import GroupCallParticipantsScreen from './src/screens/GroupCallParticipantsScreen';
+import GroupCallRoomInfoScreen from './src/screens/GroupCallRoomInfoScreen';
+import GroupCallRoomScreen from './src/screens/GroupCallRoomScreen';
+import GroupCallSettingsScreen from './src/screens/GroupCallSettingsScreen';
+import GroupCallSignInScreen from './src/screens/GroupCallSignInScreen';
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+// SendbirdCalls.Logger.setLogLevel('debug');
+SendbirdCalls.initialize('SAMPLE_APP_ID');
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  usePermissions(CALL_PERMISSIONS);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <StyleProviders>
+      <AuthProvider>
+        <NavigationContainer
+          ref={navigationRef}
+          theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: Palette.background50 } }}
+        >
+          <StatusBar backgroundColor={'#FFFFFF'} barStyle={'dark-content'} />
+          <Navigation />
+        </NavigationContainer>
+      </AuthProvider>
+    </StyleProviders>
   );
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const Navigation = () => {
+  const { currentUser } = useAuthContext();
+  return (
+    <Stack.Navigator>
+      {!currentUser ? (
+        <Stack.Screen name={GroupRoutes.SIGN_IN} component={GroupCallSignInScreen} options={{ headerShown: false }} />
+      ) : (
+        <>
+          <Stack.Screen name={GroupRoutes.HOME_TAB} component={GroupCallHomeTab} options={{ headerShown: false }} />
+          <Stack.Screen
+            name={GroupRoutes.ENTER_ROOM}
+            component={GroupCallEnterRoomScreen}
+            options={{ header: () => <Header title="Enter room" headerLeftType={HeaderLeftTypes.CANCEL} /> }}
+          />
+          <Stack.Screen name={GroupRoutes.ROOM} component={GroupCallRoomScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name={GroupRoutes.ROOM_INFO}
+            component={GroupCallRoomInfoScreen}
+            options={{ header: () => <Header title="Room information" headerLeftType={HeaderLeftTypes.BACK} /> }}
+          />
+          <Stack.Screen
+            name={GroupRoutes.PARTICIPANTS}
+            component={GroupCallParticipantsScreen}
+            options={{ header: () => <Header title="Participants" headerLeftType={HeaderLeftTypes.CANCEL} /> }}
+          />
+          <Stack.Screen
+            name={GroupRoutes.SETTINGS}
+            component={GroupCallSettingsScreen}
+            options={{ header: () => <Header title="Settings" headerLeftType={HeaderLeftTypes.BACK} /> }}
+          />
+          <Stack.Screen
+            name={GroupRoutes.APP_INFO}
+            component={GroupCallAppInfoScreen}
+            options={{
+              header: () => <Header title="Application information" headerLeftType={HeaderLeftTypes.BACK} />,
+            }}
+          />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+};
+
+const StyleProviders = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <SafeAreaProvider>
+      <UIKitThemeProvider theme={LightUIKitTheme}>
+        <DialogProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </DialogProvider>
+      </UIKitThemeProvider>
+    </SafeAreaProvider>
+  );
+};
 
 export default App;
