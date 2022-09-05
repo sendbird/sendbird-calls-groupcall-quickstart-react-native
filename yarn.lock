@@ -1415,8 +1415,8 @@
   integrity sha512-1k57PXJIfhZrjA4ZQr+goTEYer8MBhe1At6XjVYJq1oBuhG/CIu0gX1EH9fU9exC65e5uDs/zAwjl6Ps+3lCgg==
 
 "@sendbird/calls-react-native@sendbird/sendbird-calls-react-native":
-  version "0.4.0"
-  resolved "git+ssh://git@github.com/sendbird/sendbird-calls-react-native.git#cc4c3d3d13e08d06539cb26ea6fa399b89b67059"
+  version "1.0.0-rc.0"
+  resolved "git+ssh://git@github.com/sendbird/sendbird-calls-react-native.git#e1835ec8e4b427818ef92b76a23bcc1e20d6e5d0"
 
 "@sendbird/uikit-react-native-foundation@^1.0.2":
   version "1.0.2"
