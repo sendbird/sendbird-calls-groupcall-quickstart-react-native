@@ -373,12 +373,12 @@ PODS:
   - RNScreens (3.15.0):
     - React-Core
     - React-RCTImage
-  - sendbird-calls-react-native (0.4.0):
+  - sendbird-calls-react-native (1.0.0):
     - React-Core
-    - SendBirdCalls (= 1.9.4)
-  - SendBirdCalls (1.9.4):
-    - SendBirdWebRTC (~> 1.5.0)
-  - SendBirdWebRTC (1.5.0)
+    - SendBirdCalls (= 1.9.5)
+  - SendBirdCalls (1.9.5):
+    - SendBirdWebRTC (~> 1.6.0)
+  - SendBirdWebRTC (1.6.0)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -612,9 +612,9 @@ SPEC CHECKSUMS:
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
-  sendbird-calls-react-native: b36c149a7a439e4ccbb495064854183178d8c0f0
-  SendBirdCalls: 7ecc15b7712f435bdc7e86ced5feee158266a464
-  SendBirdWebRTC: 0ef66b6e6b2f73b307d1e4fe63ce36ab3f0b2518
+  sendbird-calls-react-native: de893a60018d51d2df5a37b6166a6768d8f95884
+  SendBirdCalls: e235413a341e192f2ada27f0c3ca89b642fee0d2
+  SendBirdWebRTC: 6bbdbda7aa2f9c3f2cbedacd3e53b9536e2ac8ac
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 44c64131616253fa83366295acdbce3d14926041
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

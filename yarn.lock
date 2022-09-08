@@ -1414,9 +1414,10 @@
   resolved "https://registry.yarnpkg.com/@sayem314/react-native-keep-awake/-/react-native-keep-awake-1.1.0.tgz#852f9f8481c0ab38a54d6f0b85324f3024eb6031"
   integrity sha512-1k57PXJIfhZrjA4ZQr+goTEYer8MBhe1At6XjVYJq1oBuhG/CIu0gX1EH9fU9exC65e5uDs/zAwjl6Ps+3lCgg==
 
-"@sendbird/calls-react-native@sendbird/sendbird-calls-react-native":
-  version "1.0.0-rc.0"
-  resolved "git+ssh://git@github.com/sendbird/sendbird-calls-react-native.git#e1835ec8e4b427818ef92b76a23bcc1e20d6e5d0"
+"@sendbird/calls-react-native@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@sendbird/calls-react-native/-/calls-react-native-1.0.0.tgz#8052f9707591dfcc9cfad930b3779332663674d4"
+  integrity sha512-JD/S85aOxGLCF4OyeuueEWN8UPBHOWgBHb+kdwH7Q9T/Hg7XXFthbZcDa8pMbs69IGsU3fLBSn8Un1wztQ5+ag==
 
 "@sendbird/uikit-react-native-foundation@^1.0.2":
   version "1.0.2"
