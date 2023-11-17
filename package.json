@@ -22,7 +22,7 @@
     "@sendbird/calls-react-native": "^1.0.0",
     "@sendbird/uikit-react-native-foundation": "^1.0.2",
     "react": "18.0.0",
-    "react-native": "0.69.3",
+    "react-native": "0.69.12",
     "react-native-camera-kit": "^12.1.0",
     "react-native-permissions": "^3.6.0",
     "react-native-safe-area-context": "^4.3.1",
